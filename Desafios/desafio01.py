@@ -68,5 +68,5 @@ while True:
     
     else:
         print("Opção inválida, retornando ao menu principal.")
-        break
+        
 
