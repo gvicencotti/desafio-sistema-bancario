@@ -8,7 +8,7 @@ Estas são minhas primeiras 4 aulas e desafio de codificação em Coding Your Fu
 - Estruturas condicionais
 - Loops
 - Tratamento de Strings
-- 
+  
 ## Desafio
 A proposta do desafio final foi criar um modelo simples de sistema bancário em Python com apenas 3 funcionalidades:
 
