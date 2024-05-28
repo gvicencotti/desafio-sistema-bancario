@@ -8,6 +8,14 @@ usuarios = []
 contas_correntes = []
 
 def sacar(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
+
+    if numero_saques == LIMITE_SAQUES:
+        print("Você chegou ao seu limite de saques diários. Por gentileza, tente novamente amanhã.")
+        print("\nDeseja realizar outra operação?")
+        return saldo, extrato, numero_saques
+    
+    valor = float(input("\nValor a ser sacado: R$ "))
+
     if valor > limite:
         print("Você ultrapassou o limite de R$500.00, operação não autorizada. Gostaria de realizar outra operação?")
         return saldo, extrato, numero_saques
@@ -121,12 +129,6 @@ while True:
         
     
     elif opcao == 2:
-        if numero_saques == LIMITE_SAQUES:
-            print("Você chegou ao seu limite de saques diários. Por gentileza, tente novamente amanhã.")
-            print("\nDeseja realizar outra operação?")
-            continue
-        
-        valor = float(input("\nValor a ser sacado: R$ "))
         saldo, extrato, numero_saques = sacar(saldo=saldo,
                                             valor=valor,
                                             extrato=extrato,
@@ -135,7 +137,7 @@ while True:
                                             limite_saques=LIMITE_SAQUES)
 
     elif opcao == 3:
-        mostrar_extrato(saldo, extrato)
+        mostrar_extrato(saldo, extrato=extrato)
 
     elif opcao == 4:
         criar_usuario()
