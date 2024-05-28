@@ -33,7 +33,7 @@ while True:
     elif opcao == 2:
 
         if numero_saques == LIMITE_SAQUES:
-            print("Você excedeu o seu limite de saques diários. Por gentileza, tente novamente amanhã.")
+            print("Você chegou ao seu limite de saques diários. Por gentileza, tente novamente amanhã.")
             print("\nDeseja realizar outra operação?")
             continue
         
@@ -68,5 +68,3 @@ while True:
     
     else:
         print("Opção inválida, retornando ao menu principal.")
-
-
