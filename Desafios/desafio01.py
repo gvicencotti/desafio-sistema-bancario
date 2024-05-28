@@ -121,6 +121,11 @@ while True:
         
     
     elif opcao == 2:
+        if numero_saques == LIMITE_SAQUES:
+            print("Você chegou ao seu limite de saques diários. Por gentileza, tente novamente amanhã.")
+            print("\nDeseja realizar outra operação?")
+            continue
+        
         valor = float(input("\nValor a ser sacado: R$ "))
         saldo, extrato, numero_saques = sacar(saldo=saldo,
                                             valor=valor,
