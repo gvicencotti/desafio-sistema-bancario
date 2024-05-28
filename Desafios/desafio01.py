@@ -75,7 +75,7 @@ def criar_conta_corrente(agencia, numero_conta, usuarios):
         if str(usuario['cpf']) == cpf:
             print("\nSua conta foi criada com sucesso!")
             conta_corrente = {"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario}
-            contas_correntes.append(conta_corrente)  # Adicionando a conta corrente à lista
+            contas_correntes.append(conta_corrente)
             return conta_corrente
         
     print("Não foi possível identificar o usuário.")
