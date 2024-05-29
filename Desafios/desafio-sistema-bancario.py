@@ -1,3 +1,4 @@
+# Declaração das variáveis e constantes
 saldo = 0
 limite = 500
 extrato = ""
@@ -65,7 +66,7 @@ def mostrar_extrato(saldo, /, *, extrato):
         print(extrato)
         print(f"Seu saldo é de R${saldo}!")  
 
-def criar_usuario():
+def criar_usuario(): 
     print("=============== CADASTRO ==================\n")
     print("Por gentileza, informe seus dados abaixo para realizarmos seu cadastro.")
     nome = input("Nome: ")
@@ -78,19 +79,19 @@ def criar_usuario():
 
     return nome, data_nascimento, cpf, endereco
 
-def criar_conta_corrente(agencia, numero_conta, usuarios):
+def criar_conta_corrente(agencia, usuarios):
     cpf = input("Informe o CPF do usuário: ")
 
     for usuario in usuarios:
         if  usuario['cpf'] == cpf:
-            numero_conta = len(contas_correntes) + 1
+            numero_conta = len(contas_correntes) + 1 #Geração do número da conta através da quantidade de contas criadas
             print("\nSua conta foi criada com sucesso!")
             conta_corrente = {"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario}
             contas_correntes.append(conta_corrente)
             return conta_corrente
         
     print("Não foi possível identificar o usuário.")
-    return None
+    return None # Criação de usuário não foi bem sucedida
 
 def listar_contas(contas_correntes):
     if not contas_correntes:
@@ -98,7 +99,7 @@ def listar_contas(contas_correntes):
         return
     
     print("=== Contas Correntes ===")
-    for conta in contas_correntes:
+    for conta in contas_correntes: # Itera sobre os dados das contas correntes e apresenta os dados
         usuario = conta["usuario"]
         print(f"Agência: {conta['agencia']}")
         print(f"Número da Conta: {conta['numero_conta']}")
@@ -107,6 +108,7 @@ def listar_contas(contas_correntes):
         print(f"CPF: {usuario['cpf']}")
         print("------------------------")
 
+# Menu principal de exibição
 menu = """
 
 [1] Depositar
@@ -136,7 +138,7 @@ while True:
     elif opcao == 4:
         criar_usuario()
     elif opcao == 5:
-        criar_conta_corrente(AGENCIA, numero_conta, usuarios)
+        criar_conta_corrente(AGENCIA, usuarios)
     elif opcao == 6:
         listar_contas(contas_correntes)
 
