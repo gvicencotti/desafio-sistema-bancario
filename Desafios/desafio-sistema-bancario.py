@@ -111,7 +111,10 @@ class Historico:
         return self._transacoes
         
     def adicionar_transacao(self, transacao):
-        self._transacoes.append(transacao)
+        self._transacoes.append({
+            "descricao": transacao,
+            "data_hora": datetime.now()
+        })
 
 class Cliente:
     def __init__(self, endereco):
@@ -230,7 +233,8 @@ def mostrar_extrato():
     if conta:
         print("==== Extrato ====")
         for transacao in conta.historico.transacoes:
-            print(transacao)
+            data_hora = transacao["data_hora"].strftime("%d/%m/%Y %H:%M:%S")
+            print(f"{data_hora} - {transacao['descricao']}")
         print(f"Saldo atual: R$ {conta.saldo:.2f}")
     else:
         print("Conta não encontrada.")
