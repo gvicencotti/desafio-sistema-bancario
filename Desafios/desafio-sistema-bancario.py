@@ -63,7 +63,6 @@ class ContaCorrente(Conta):
         super().__init__(numero, cliente)
         self._limite = limite
         self._limite_saques = limite_saques
-        self._numero_saques = 0
 
     @property
     def limite(self):
@@ -72,11 +71,7 @@ class ContaCorrente(Conta):
     @property
     def limite_saques(self):
         return self._limite_saques
-    
-    @property
-    def numero_saques(self):
-        return self._numero_saques
-    
+
     def sacar(self, valor):    
         if self._numero_saques >= self._limite_saques:
             print("Você chegou ao seu limite de saques diários. Por gentileza, tente novamente amanhã.")
@@ -97,10 +92,7 @@ class Historico:
         return self._transacoes
         
     def adicionar_transacao(self, transacao):
-        self._transacoes.append({
-                "tipo": transacao.__class__.__name__,
-                "valor": transacao.valor
-        })
+        self._transacoes.append(transacao)
 
 class Cliente:
     def __init__(self, endereco):
@@ -139,7 +131,7 @@ class Saque(Transacao):
         sucesso_transacao = conta.sacar(self.valor)
 
         if sucesso_transacao:
-            conta.historico.adicionar_transacao(self)
+            conta.historico.adicionar_transacao(f"Saque: R${self.valor:.2f}")
 
 class Deposito(Transacao):
     def __init__(self, valor):
@@ -153,7 +145,7 @@ class Deposito(Transacao):
         sucesso_transacao = conta.depositar(self.valor)
 
         if sucesso_transacao:
-            conta.historico.adicionar_transacao(self)
+            conta.historico.adicionar_transacao(f"Depósito: R${self.valor:.2f}")
 
 menu = """
 [1] Depositar
@@ -182,8 +174,13 @@ def encontrar_cliente(cpf):
 
 def depositar():
     numero_conta = input("Número da conta: ")
-    valor = float(input("Valor do depósito: R$ "))
+    valor = input("Valor do depósito: R$ ")
     
+    if not valor.isdigit():
+        print("Valor inválido.")
+        return
+    
+    valor = float(valor)
     conta = encontrar_conta(numero_conta)
     if conta:
         deposito = Deposito(valor)
@@ -193,8 +190,13 @@ def depositar():
 
 def sacar():
     numero_conta = input("Número da conta: ")
-    valor = float(input("Valor do saque: R$ "))
+    valor = input("Valor do saque: R$ ")
     
+    if not valor.isdigit():
+        print("Valor inválido.")
+        return
+    
+    valor = float(valor)
     conta = encontrar_conta(numero_conta)
     if conta:
         saque = Saque(valor)
@@ -209,7 +211,7 @@ def mostrar_extrato():
     if conta:
         print("==== Extrato ====")
         for transacao in conta.historico.transacoes:
-            print(f"{transacao['tipo']}: R$ {transacao['valor']:.2f}")
+            print(transacao)
         print(f"Saldo atual: R$ {conta.saldo:.2f}")
     else:
         print("Conta não encontrada.")
@@ -246,7 +248,11 @@ def listar_contas():
         print("Nenhuma conta corrente encontrada.")
 
 while True:
-    opcao = int(input(menu))
+    try:
+        opcao = int(input(menu))
+    except ValueError:
+        print("Opção inválida, retornando ao menu principal.")
+        continue
 
     if opcao == 1:
         depositar()     
