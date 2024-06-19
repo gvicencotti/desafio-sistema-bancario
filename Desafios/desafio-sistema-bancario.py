@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 class Conta:
     def __init__(self, numero, cliente):
@@ -7,7 +8,8 @@ class Conta:
         self._agencia = "0001"
         self._cliente = cliente
         self._historico = Historico()
-        self._numero_saques = 0
+        self._numero_transacoes = 0
+        self._data_ultima_transacao = datetime.min
 
     @classmethod
     def criar_nova_conta(cls, numero, cliente):
@@ -33,7 +35,24 @@ class Conta:
     def historico(self):
         return self._historico
 
+    def _atualizar_contagem_transacoes(self):
+        hoje = datetime.now()
+        if hoje.date() != self._data_ultima_transacao.date():
+            self._numero_transacoes = 0
+        self._data_ultima_transacao = hoje
+
+    def verificar_limite_transacoes(self):
+        self._atualizar_contagem_transacoes()
+        if self._numero_transacoes >= 10:
+            print("Você atingiu o limite diário de 10 transações.")
+            return False
+        return True
+
     def sacar(self, valor):
+        self._atualizar_contagem_transacoes()
+        if not self.verificar_limite_transacoes():
+            return False
+
         if valor > self._saldo:
             print("Você não possui saldo o suficiente para completar a transação.")
             return False
@@ -41,7 +60,7 @@ class Conta:
         if valor > 0:
             self._saldo -= valor
             self._historico.adicionar_transacao(f"Saque: R${valor:.2f}")
-            self._numero_saques += 1
+            self._numero_transacoes += 1
             print("==== Saque realizado com sucesso. ====")
             return True
         else:
@@ -49,9 +68,14 @@ class Conta:
             return False
     
     def depositar(self, valor):
+        self._atualizar_contagem_transacoes()
+        if not self.verificar_limite_transacoes():
+            return False
+
         if valor > 0:
             self._saldo += valor
             self._historico.adicionar_transacao(f"Depósito: R${valor:.2f}")
+            self._numero_transacoes += 1
             print("==== Depósito realizado com sucesso! ====")
             return True
         else:
@@ -59,22 +83,17 @@ class Conta:
             return False
 
 class ContaCorrente(Conta):
-    def __init__(self, numero, cliente, limite=500, limite_saques=3):
+    def __init__(self, numero, cliente, limite=500):
         super().__init__(numero, cliente)
         self._limite = limite
-        self._limite_saques = limite_saques
 
     @property
     def limite(self):
         return self._limite
-    
-    @property
-    def limite_saques(self):
-        return self._limite_saques
 
     def sacar(self, valor):    
-        if self._numero_saques >= self._limite_saques:
-            print("Você chegou ao seu limite de saques diários. Por gentileza, tente novamente amanhã.")
+        self._atualizar_contagem_transacoes()
+        if not self.verificar_limite_transacoes():
             return False
 
         if valor > (self._saldo + self._limite):
