@@ -1,0 +1,13 @@
+2024-06-23 21:17:05 - depositar - args: (), kwargs: {} - Retorno: False
+2024-06-23 21:17:15 - criar_usuario - args: (), kwargs: {} - Retorno: True
+2024-06-23 21:17:35 - criar_conta_corrente - args: (), kwargs: {} - Retorno: True
+2024-06-23 21:17:46 - listar_contas - args: (), kwargs: {} - Retorno: True
+2024-06-23 21:17:53 - depositar - args: (<__main__.ContaCorrente object at 0x7f58bcb14f10>, 500.0), kwargs: {} - Retorno: True
+2024-06-23 21:17:53 - registrar - args: (<__main__.Deposito object at 0x7f58bcb14eb0>, <__main__.ContaCorrente object at 0x7f58bcb14f10>), kwargs: {} - Retorno: None
+2024-06-23 21:17:49 - depositar - args: (), kwargs: {} - Retorno: True
+2024-06-23 21:17:58 - sacar - args: (), kwargs: {} - Retorno: False
+2024-06-23 21:18:12 - sacar - args: (<__main__.ContaCorrente object at 0x7f58bcb14f10>, 200.0), kwargs: {} - Retorno: True
+2024-06-23 21:18:12 - sacar - args: (<__main__.ContaCorrente object at 0x7f58bcb14f10>, 200.0), kwargs: {} - Retorno: True
+2024-06-23 21:18:12 - registrar - args: (<__main__.Saque object at 0x7f58bcb14eb0>, <__main__.ContaCorrente object at 0x7f58bcb14f10>), kwargs: {} - Retorno: None
+2024-06-23 21:18:06 - sacar - args: (), kwargs: {} - Retorno: True
+2024-06-23 21:18:15 - mostrar_extrato - args: (), kwargs: {} - Retorno: True

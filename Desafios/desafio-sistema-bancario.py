@@ -1,5 +1,22 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
+import functools
+
+def log_decorator(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        data_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        nome_funcao = func.__name__
+        argumentos = f"args: {args}, kwargs: {kwargs}"
+        valor_retornado = func(*args, **kwargs)
+        entrada_log = f"{data_hora} - {nome_funcao} - {argumentos} - Retorno: {valor_retornado}\n"
+        
+        with open("log.txt", "a") as log_file:
+            log_file.write(entrada_log)
+        
+        return valor_retornado
+    
+    return wrapper
 
 class Conta:
     def __init__(self, numero, cliente):
@@ -48,6 +65,7 @@ class Conta:
             return False
         return True
 
+    @log_decorator
     def sacar(self, valor):
         self._atualizar_contagem_transacoes()
         if not self.verificar_limite_transacoes():
@@ -67,6 +85,7 @@ class Conta:
             print("Não é possível concluir a operação.")
             return False
     
+    @log_decorator
     def depositar(self, valor):
         self._atualizar_contagem_transacoes()
         if not self.verificar_limite_transacoes():
@@ -91,6 +110,7 @@ class ContaCorrente(Conta):
     def limite(self):
         return self._limite
 
+    @log_decorator
     def sacar(self, valor):    
         self._atualizar_contagem_transacoes()
         if not self.verificar_limite_transacoes():
@@ -149,6 +169,7 @@ class Saque(Transacao):
     def valor(self):
         return self._valor
 
+    @log_decorator
     def registrar(self, conta):
         sucesso_transacao = conta.sacar(self.valor)
 
@@ -163,6 +184,7 @@ class Deposito(Transacao):
     def valor(self):
         return self._valor
 
+    @log_decorator
     def registrar(self, conta):
         sucesso_transacao = conta.depositar(self.valor)
 
@@ -194,38 +216,45 @@ def encontrar_cliente(cpf):
             return cliente
     return None
 
+@log_decorator
 def depositar():
     numero_conta = input("Número da conta: ")
     valor = input("Valor do depósito: R$ ")
     
     if not valor.isdigit():
         print("Valor inválido.")
-        return
+        return False
     
     valor = float(valor)
     conta = encontrar_conta(numero_conta)
     if conta:
         deposito = Deposito(valor)
         deposito.registrar(conta)
+        return True
     else:
         print("Conta não encontrada.")
+        return False
 
+@log_decorator
 def sacar():
     numero_conta = input("Número da conta: ")
     valor = input("Valor do saque: R$ ")
     
     if not valor.isdigit():
         print("Valor inválido.")
-        return
+        return False
     
     valor = float(valor)
     conta = encontrar_conta(numero_conta)
     if conta:
         saque = Saque(valor)
         saque.registrar(conta)
+        return True
     else:
         print("Conta não encontrada.")
+        return False
 
+@log_decorator
 def mostrar_extrato():
     numero_conta = input("Número da conta: ")
     
@@ -236,9 +265,12 @@ def mostrar_extrato():
             data_hora = transacao["data_hora"].strftime("%d/%m/%Y %H:%M:%S")
             print(f"{data_hora} - {transacao['descricao']}")
         print(f"Saldo atual: R$ {conta.saldo:.2f}")
+        return True
     else:
         print("Conta não encontrada.")
+        return False
 
+@log_decorator
 def criar_usuario():
     nome = input("Nome: ")
     data_nascimento = input("Data de Nascimento: ")
@@ -248,7 +280,9 @@ def criar_usuario():
     cliente = PessoaFisica(nome, data_nascimento, cpf, endereco)
     clientes.append(cliente)
     print("Usuário criado com sucesso!")
+    return True
 
+@log_decorator
 def criar_conta_corrente():
     cpf = input("CPF do cliente: ")
     cliente = encontrar_cliente(cpf)
@@ -259,16 +293,21 @@ def criar_conta_corrente():
         cliente.adicionar_conta(conta)
         contas_correntes.append(conta)
         print("Conta corrente criada com sucesso!")
+        return True
     else:
         print("Cliente não encontrado.")
+        return False
 
+@log_decorator
 def listar_contas():
     if contas_correntes:
         print("==== Contas Correntes ====")
         for conta in contas_correntes:
             print(f"Conta {conta.numero} - Saldo: R$ {conta.saldo:.2f}")
+        return True
     else:
         print("Nenhuma conta corrente encontrada.")
+        return False
 
 while True:
     try:
