@@ -18,6 +18,20 @@ def log_decorator(func):
     
     return wrapper
 
+class Historico:
+    def __init__(self):
+        self._transacoes = []
+
+    @property
+    def transacoes(self):
+        return self._transacoes
+        
+    def adicionar_transacao(self, transacao):
+        self._transacoes.append({
+            "descricao": transacao,
+            "data_hora": datetime.now()
+        })
+
 class Conta:
     def __init__(self, numero, cliente):
         self._saldo = 0 
@@ -122,20 +136,6 @@ class ContaCorrente(Conta):
         
         return super().sacar(valor)
 
-class Historico:
-    def __init__(self):
-        self._transacoes = []
-
-    @property
-    def transacoes(self):
-        return self._transacoes
-        
-    def adicionar_transacao(self, transacao):
-        self._transacoes.append({
-            "descricao": transacao,
-            "data_hora": datetime.now()
-        })
-
 class Cliente:
     def __init__(self, endereco):
         self._endereco = endereco
@@ -221,11 +221,12 @@ def depositar():
     numero_conta = input("Número da conta: ")
     valor = input("Valor do depósito: R$ ")
     
-    if not valor.isdigit():
+    try:
+        valor = float(valor)
+    except ValueError:
         print("Valor inválido.")
         return False
     
-    valor = float(valor)
     conta = encontrar_conta(numero_conta)
     if conta:
         deposito = Deposito(valor)
@@ -240,11 +241,12 @@ def sacar():
     numero_conta = input("Número da conta: ")
     valor = input("Valor do saque: R$ ")
     
-    if not valor.isdigit():
+    try:
+        valor = float(valor)
+    except ValueError:
         print("Valor inválido.")
         return False
     
-    valor = float(valor)
     conta = encontrar_conta(numero_conta)
     if conta:
         saque = Saque(valor)
